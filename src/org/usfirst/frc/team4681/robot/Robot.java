@@ -20,25 +20,20 @@ import org.usfirst.frc.team4681.robot.subsystems.ExampleSubsystem;
 public class Robot extends IterativeRobot {
 
 	public static final ExampleSubsystem exampleSubsystem = new ExampleSubsystem();
-	public static OI oi;
 	public Victor frontLeftMotor = new Victor(0);
 	public Victor frontRightMotor = new Victor(1);
 	public Victor backLeftMotor = new Victor(2);
 	public Victor backRightMotor = new Victor(3);
-	public Victor raiseLowerMotor = new Victor(4);
 	
 	public Encoder frontLeftEncoder = new Encoder(0,1);
 	public Encoder frontRightEncoder = new Encoder(2,3);
 	public Encoder backLeftEncoder = new Encoder(4,5);
 	public Encoder backRightEncoder = new Encoder(6,7);
-	public Encoder raiseLowerEncoder = new Encoder(8,9);
-	
 	
 	public Joystick Joy1 = new Joystick(0);
 	public Joystick Joy2 = new Joystick(1);
 	
-	boolean isBroken = false;
-	double dHeight = 0;
+	Carriage carriage = new Carriage(new Victor(4), new Encoder(8,9));
 	
 	public double encoderMax = 0;
     Command autonomousCommand;
@@ -48,9 +43,6 @@ public class Robot extends IterativeRobot {
      * used for any initialization code.
      */
     public void robotInit() {
-		oi = new OI();
-		SmartDashboard.putNumber("Height(TEST)", raiseLowerEncoder.getDistance());
-		SmartDashboard.putNumber("desiredHeight", dHeight);
         // instantiate the command used for the autonomous period
         autonomousCommand = new ExampleCommand();
     }
@@ -77,7 +69,7 @@ public class Robot extends IterativeRobot {
         // continue until interrupted by another command, remove
         // this line or comment it out.
         if (autonomousCommand != null) autonomousCommand.cancel();
-        raiseLowerEncoder.reset();
+        carriage.reset();
     }
     
    /*
@@ -91,72 +83,15 @@ public class Robot extends IterativeRobot {
    //This function is called periodically during operator control
     public void teleopPeriodic() {
         Scheduler.getInstance().run();
-        drive();
-        //tune();
-        dHeight = SmartDashboard.getNumber("desiredHeight");
-        changeHeight();
-        SmartDashboard.putNumber("Height(TEST)", getHeight());
+        //drive();
+        carriage.changeHeight(SmartDashboard.getNumber("Height"));
     }
     
     // This function is called periodically during test mode
      public void testPeriodic() {
         LiveWindow.run();
     }
-    
-    //This is a testing method to raise and lower the carriage
-    public void raiseLower() throws InterruptedException{
-    	
-    	if(Joy1.getRawButton(1)){
-    		raiseLowerMotor.set(1.0);
-    		isBroken = false;
-    	}
-    	else
-    	if(Joy1.getRawButton(2)){
-    		raiseLowerMotor.set(-1.0);
-    		isBroken = false;
-    	}
-    	else
-    		brake();
-    	SmartDashboard.putNumber("Height(TEST)", raiseLowerEncoder.get()/250*1.3*Math.PI);
-    }
-    public void changeHeight(){
-    	if(getHeight()<dHeight){
-    		raise();
-    	}
-    	if(getHeight()>dHeight){
-    		lower();
-    	}
-    	if(getHeight() == dHeight){
-    		try {
-				brake();
-			} catch (InterruptedException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
-    	}
-    }
-    
-    public void raise(){
-    	raiseLowerMotor.set(0.5);
-    }
-    public void lower(){
-    	raiseLowerMotor.set(-0.5);
-    }
-    public double getHeight(){
-    	return(raiseLowerEncoder.get()*1.3*Math.PI/250/12);
-    }
-    
-    public void brake() throws InterruptedException{
-    	SmartDashboard.putNumber("Rate", raiseLowerEncoder.getRate());
-    	if(!(raiseLowerEncoder.getRate()<=1)){
-    		if(raiseLowerEncoder.getDirection()){
-    			raiseLowerMotor.set(-0.4);
-    		}
-    		else
-    			raiseLowerMotor.set(0.4);
-    	}
-    	
-    }
+
     //Encoder print method for constant tuning
     public void tune(){
     	if(frontLeftEncoder.getRate() > encoderMax){
