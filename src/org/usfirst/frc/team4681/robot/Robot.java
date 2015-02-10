@@ -21,7 +21,7 @@ public class Robot extends IterativeRobot {
 	Drive drive = new Drive(new Victor(0), new Victor(1), new Victor(2), new Victor(3), 
 			new Encoder(0,1), new Encoder(2,3), new Encoder(4,5), new Encoder(6,7));
 	
-	Carriage carriage = new Carriage(new Victor(4), new Encoder(8,9));
+	Elevator elevator = new Elevator(new Victor(4), new Encoder(8,9));
 	
 	public double encoderMax = 0;
     Command autonomousCommand;
@@ -56,7 +56,7 @@ public class Robot extends IterativeRobot {
         // continue until interrupted by another command, remove
         // this line or comment it out.
         if (autonomousCommand != null) autonomousCommand.cancel();
-        carriage.reset();
+        elevator.reset();
     }
     
    /*
@@ -76,7 +76,7 @@ public class Robot extends IterativeRobot {
     // This function is called periodically during test mode
      public void testPeriodic() {
         LiveWindow.run();
-        carriage.changeHeight(SmartDashboard.getNumber("Height"));
+        elevator.changeHeight(SmartDashboard.getNumber("Height"));
     }
  }
 
