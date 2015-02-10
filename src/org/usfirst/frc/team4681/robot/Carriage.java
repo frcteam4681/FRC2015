@@ -3,11 +3,11 @@ package org.usfirst.frc.team4681.robot;
 import edu.wpi.first.wpilibj.*;
 
 public class Carriage {
-	Victor carriageMotor;
+	PIDMotor carriageMotor;
 	Encoder carriageEncoder;
 	double speed = 0.5;
 	double diameter = 1.3;
-	double p=0.1, d=0.1;
+	double p=0.1, d=0.0;
 	
 	PIDController carriageController = new PIDController(p,0.0,d, new DistancePIDEncoder(carriageEncoder, diameter), carriageMotor, 50);
 	
@@ -18,8 +18,9 @@ public class Carriage {
 	}
 	
 	public Carriage(Victor motor, Encoder encoder){
-		carriageMotor = motor;
+		carriageMotor = new PIDMotor(motor);
 		carriageEncoder = encoder;
+		PIDInit();
 		carriageController.enable();
 	}
 	
@@ -46,5 +47,4 @@ public class Carriage {
 	public void reset(){
 		carriageEncoder.reset();
 	}
-	
 }
