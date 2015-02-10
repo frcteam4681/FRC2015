@@ -7,9 +7,6 @@ import edu.wpi.first.wpilibj.command.Scheduler;
 import edu.wpi.first.wpilibj.livewindow.LiveWindow;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
-import org.usfirst.frc.team4681.robot.commands.ExampleCommand;
-import org.usfirst.frc.team4681.robot.subsystems.ExampleSubsystem;
-
 /**
  * The VM is configured to automatically run this class, and to call the
  * functions corresponding to each mode, as described in the IterativeRobot
@@ -18,20 +15,11 @@ import org.usfirst.frc.team4681.robot.subsystems.ExampleSubsystem;
  * directory.
  */
 public class Robot extends IterativeRobot {
-
-	public static final ExampleSubsystem exampleSubsystem = new ExampleSubsystem();
-	public Victor frontLeftMotor = new Victor(0);
-	public Victor frontRightMotor = new Victor(1);
-	public Victor backLeftMotor = new Victor(2);
-	public Victor backRightMotor = new Victor(3);
-	
-	public Encoder frontLeftEncoder = new Encoder(0,1);
-	public Encoder frontRightEncoder = new Encoder(2,3);
-	public Encoder backLeftEncoder = new Encoder(4,5);
-	public Encoder backRightEncoder = new Encoder(6,7);
-	
 	public Joystick Joy1 = new Joystick(0);
 	public Joystick Joy2 = new Joystick(1);
+	
+	Drive drive = new Drive(new Victor(0), new Victor(1), new Victor(2), new Victor(3), 
+			new Encoder(0,1), new Encoder(2,3), new Encoder(4,5), new Encoder(6,7));
 	
 	Carriage carriage = new Carriage(new Victor(4), new Encoder(8,9));
 	
@@ -44,7 +32,6 @@ public class Robot extends IterativeRobot {
      */
     public void robotInit() {
         // instantiate the command used for the autonomous period
-        autonomousCommand = new ExampleCommand();
     }
 	
 	public void disabledPeriodic() {
@@ -83,54 +70,13 @@ public class Robot extends IterativeRobot {
    //This function is called periodically during operator control
     public void teleopPeriodic() {
         Scheduler.getInstance().run();
-        //drive();
-        carriage.changeHeight(SmartDashboard.getNumber("Height"));
+        drive.drive(Joy1.getX(), Joy1.getY(), Joy2.getX());
     }
     
     // This function is called periodically during test mode
      public void testPeriodic() {
         LiveWindow.run();
-    }
-
-    //Encoder print method for constant tuning
-    public void tune(){
-    	if(frontLeftEncoder.getRate() > encoderMax){
-    		encoderMax = frontLeftEncoder.getRate();
-    		System.out.println(encoderMax);
-    	}
-    	if(frontRightEncoder.getRate() > encoderMax){
-    		encoderMax = frontRightEncoder.getRate();
-    		System.out.println(encoderMax);
-    	}
-    	if(backLeftEncoder.getRate() > encoderMax){
-    		encoderMax = backLeftEncoder.getRate();
-    		System.out.println(encoderMax);
-    	}
-    	if(backRightEncoder.getRate() > encoderMax){
-    		encoderMax = backRightEncoder.getRate();
-    		System.out.println(encoderMax);
-    	}
-    	
-    }
-    
-    //Drive code is isolated here
-    public void drive(){
-    	frontLeftMotor.set(specialSquare(-Joy1.getY() + Joy1.getX() - Joy2.getX()));
-        backLeftMotor.set(specialSquare(Joy1.getY() - Joy1.getX() - Joy2.getX()));
-        frontRightMotor.set(specialSquare(-(-Joy1.getY() - Joy1.getX() + Joy2.getX())));
-        backRightMotor.set(specialSquare(-(Joy1.getY() + Joy1.getX() + Joy2.getX())));
-    }
-    
-    //Squares values but preserves negatives
-    public double specialSquare(double number) {
-    	if(number>0)
-    	{
-    		return Math.pow(number, 2);
-    	}
-    	else {
-    	return (-Math.pow(number, 2));
-    	}
-    	
+        carriage.changeHeight(SmartDashboard.getNumber("Height"));
     }
  }
 
