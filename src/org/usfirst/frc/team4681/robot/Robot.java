@@ -18,8 +18,7 @@ public class Robot extends IterativeRobot {
 	public Joystick Joy1 = new Joystick(0);
 	public Joystick Joy2 = new Joystick(1);
 	
-	Drive drive = new Drive(new Victor(0), new Victor(1), new Victor(2), new Victor(3), 
-			new Encoder(0,1), new Encoder(2,3), new Encoder(4,5), new Encoder(6,7));
+	Drive drive = new Drive(0, 1, 2, 3,	new Encoder(0,1), new Encoder(2,3), new Encoder(4,5), new Encoder(6,7));
 	
 	Elevator elevator = new Elevator(4, new Encoder(8,9));
 	
