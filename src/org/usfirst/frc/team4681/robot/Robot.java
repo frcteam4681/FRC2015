@@ -21,8 +21,9 @@ public class Robot extends IterativeRobot {
 	Drive drive = new Drive(new Victor(0), new Victor(1), new Victor(2), new Victor(3), 
 			new Encoder(0,1), new Encoder(2,3), new Encoder(4,5), new Encoder(6,7));
 	
-	Elevator elevator = new Elevator(new Victor(4), new Encoder(8,9));
+	Elevator elevator = new Elevator(4, new Encoder(8,9));
 	
+	double height = 0;
 	public double encoderMax = 0;
     Command autonomousCommand;
 
@@ -32,6 +33,7 @@ public class Robot extends IterativeRobot {
      */
     public void robotInit() {
         // instantiate the command used for the autonomous period
+    	SmartDashboard.putNumber("Height", height);
     }
 	
 	public void disabledPeriodic() {
@@ -57,6 +59,9 @@ public class Robot extends IterativeRobot {
         // this line or comment it out.
         if (autonomousCommand != null) autonomousCommand.cancel();
         elevator.reset();
+        elevator.raise();
+        elevator.brake();
+        elevator.enable();
     }
     
    /*
@@ -71,12 +76,24 @@ public class Robot extends IterativeRobot {
     public void teleopPeriodic() {
         Scheduler.getInstance().run();
         drive.drive(Joy1.getX(), Joy1.getY(), Joy2.getX());
+        height = SmartDashboard.getNumber("Height");
+        elevator.changeHeight(height);
+        elevator.tune();
+        System.out.println("current Height " + elevator.getHeight());
+        if(Joy1.getRawButton(3)){
+        	elevator.raise();
+        }
+        else
+        if(Joy1.getRawButton(2)){
+        	elevator.lower();
+        }
+        else
+        	elevator.brake();
     }
     
     // This function is called periodically during test mode
      public void testPeriodic() {
         LiveWindow.run();
-        elevator.changeHeight(SmartDashboard.getNumber("Height"));
     }
  }
 
