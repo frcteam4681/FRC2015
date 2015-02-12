@@ -77,7 +77,7 @@ public class Robot extends IterativeRobot {
         drive.drive(Joy1.getX(), Joy1.getY(), Joy2.getX());
         height = SmartDashboard.getNumber("Height");
         elevator.changeHeight(height);
-        elevator.tune();
+        //elevator.tune();
         System.out.println("current Height " + elevator.getHeight());
         if(Joy1.getRawButton(3)){
         	elevator.raise();

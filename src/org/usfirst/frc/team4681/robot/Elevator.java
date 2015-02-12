@@ -47,6 +47,7 @@ public class Elevator {
 		elevatorController.setSetpoint(newHeight);
 		System.out.println(elevatorController.get());
 		SmartDashboard.putData("Elevator", elevatorController);
+		//elevatorController = SmartDashboard.getData("Elevator");
 	}
 	
 	public double getHeight(){
