@@ -68,4 +68,8 @@ public class Elevator {
 		//System.out.println("controller Enabled");
 		elevatorController.enable();
 	}
+	
+	public void disable(){
+		elevatorController.disable();
+	}
 }

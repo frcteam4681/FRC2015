@@ -21,6 +21,7 @@ public class Robot extends IterativeRobot {
 	Drive drive = new Drive(0, 1, 2, 3,	new Encoder(0,1), new Encoder(2,3), new Encoder(4,5), new Encoder(6,7));
 	
 	Elevator elevator = new Elevator(4, new Encoder(8,9));
+	boolean elevatorEnabled = false;
 	
 	double height = 0;
 	public double encoderMax = 0;
@@ -60,7 +61,7 @@ public class Robot extends IterativeRobot {
         elevator.reset();
         elevator.raise();
         elevator.brake();
-        elevator.enable();
+        //elevator.enable();
     }
     
    /*
@@ -74,6 +75,19 @@ public class Robot extends IterativeRobot {
    //This function is called periodically during operator control
     public void teleopPeriodic() {
         Scheduler.getInstance().run();
+        if(Joy1.getRawButton(8)){
+        	if(elevatorEnabled){
+        		elevator.disable();
+        		elevatorEnabled = false;
+        	}
+        	else
+        	{
+        		elevator.enable();
+        		elevatorEnabled = true;
+        	}
+        	
+        }
+
         drive.drive(Joy1.getX(), Joy1.getY(), Joy2.getX());
         height = SmartDashboard.getNumber("Height");
         elevator.changeHeight(height);
