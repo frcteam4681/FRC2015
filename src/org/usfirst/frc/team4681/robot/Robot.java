@@ -60,9 +60,6 @@ public class Robot extends IterativeRobot {
         // this line or comment it out.
         if (autonomousCommand != null) autonomousCommand.cancel();
         elevator.reset();
-        elevator.raise();
-        elevator.brake();
-        //elevator.enable();
     }
     
    /*
@@ -103,7 +100,7 @@ public class Robot extends IterativeRobot {
         height = SmartDashboard.getNumber("Height");
         elevator.changeHeight(height);
         //elevator.tune();
-        System.out.println("current Height " + elevator.getHeight());
+        //System.out.println("current Height " + elevator.getHeight());
         if(Joy1.getRawButton(3)){
         	elevator.raise();
         }

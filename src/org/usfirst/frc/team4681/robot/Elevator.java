@@ -1,76 +1,89 @@
 package org.usfirst.frc.team4681.robot;
 
 import edu.wpi.first.wpilibj.*;
-//import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
-import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 public class Elevator {
+	// define PIDMotor and Encoder objects 
 	PIDMotor elevatorMotor;
 	Encoder elevatorEncoder;
-	double speed = 0.5;
-	double diameter = 1.3;
-	double p=1.5, i=0.0,  d=0.0;
+	
+	// Speed for manual raising and lowering of elevator
+	final double speed = 0.5;
+	
+	// Diameter of pulley
+	final double diameter = 1.3;
+	
+	// Tuned PID values
+	final double p=1.5, i=0.0,  d=0.0;
+	
+	// define PID controller object
 	PIDController elevatorController;
-	//For use with manual controls to check that it does not break itself.
-	//final double MAX_HEIGHT = ???;
-	//final double MIN_HEIGHT = ???;
-	PIDTuner tuner;
+	
+	// Minimum and maximum heights of the elevator mechanism
+	final double MAX_HEIGHT = 48;
+	final double MIN_HEIGHT = 0;
+	
+	// Constructor for elevator object
 	public Elevator(int motorPort, Encoder encoder){
 		elevatorMotor = new PIDMotor(motorPort);
 		elevatorEncoder = encoder;
-		System.out.println("Init PID now");
 		PIDInit();
-		//SmartDashboard.putNumber("p-elevator", p);
-		//SmartDashboard.putNumber("d-elevator", d);
 	}
 	
+	// Various methods to configure the PID Controller correctly
 	public void PIDInit(){
-		elevatorController = new PIDController(p,0.0,d, new DistancePIDEncoder(elevatorEncoder, diameter), elevatorMotor, 0.05);
-		elevatorController.setInputRange(0,60);
+		elevatorController = new PIDController(p,i,d, new DistancePIDEncoder(elevatorEncoder, diameter), elevatorMotor, 0.05);
+		elevatorController.setInputRange(MIN_HEIGHT,MAX_HEIGHT);
 		elevatorController.setOutputRange(-1,1);
 		elevatorController.setAbsoluteTolerance(3);
-		tuner = new PIDTuner(elevatorController, "Elevator");
 	}
 	
+	// Raise the elevator manually. Does not work if PID is enabled
 	public void raise(){
 		elevatorMotor.set(speed);
 	}
 	
+	// Lower the elevator manually. Does not work if PID is enabled
 	public void lower(){
 		elevatorMotor.set(-speed);
 	}
 	
+	// Stop the motor. Should only be called following raise() or lower() methods.
 	public void brake(){
 		elevatorMotor.set(0.0);
 	}
 	
+	// Set the desired height for the PID controller
 	public void changeHeight(double newHeight){
 		System.out.println("dHeight " + newHeight);
 		elevatorController.setSetpoint(newHeight);
-		System.out.println(elevatorController.get());
-		SmartDashboard.putData("Elevator", elevatorController);
-		//elevatorController = SmartDashboard.getData("Elevator");
 	}
 	
+	// return the height of the elevator as determined by the encoder in inches
 	public double getHeight(){
 		return elevatorEncoder.get()*diameter*Math.PI/250;
 	}
 	
+	// reset the encoder to 0.0in 
 	public void reset(){
 		elevatorEncoder.reset();
 	}
 	
-	public void tune(){
-		//System.out.println("tuning");
-		tuner.dash();
-		elevatorController.setPID(tuner.getP(), tuner.getI(), tuner.getD(), 0);
-	}
+/*	No longer relevant tuning method 
+*	
+*	public void tune(){
+*		System.out.println("tuning");
+*		tuner.dash();
+*		elevatorController.setPID(tuner.getP(), tuner.getI(), tuner.getD(), 0);
+*	}
+*/	
 	
+	// enable PID controller
 	public void enable(){
-		//System.out.println("controller Enabled");
 		elevatorController.enable();
 	}
 	
+	// disable PID controller
 	public void disable(){
 		elevatorController.disable();
 	}
