@@ -22,6 +22,7 @@ public class Robot extends IterativeRobot {
 	
 	Elevator elevator = new Elevator(4, new Encoder(8,9));
 	boolean elevatorEnabled = false;
+	boolean driveEnabled = false;
 	
 	double height = 0;
 	public double encoderMax = 0;
@@ -87,7 +88,17 @@ public class Robot extends IterativeRobot {
         	}
         	
         }
-
+        if(Joy1.getRawButton(8)){
+        	if(elevatorEnabled){
+        		drive.disable();
+        		driveEnabled = false;
+        	}
+        	else
+        	{
+        		drive.enable();
+        		driveEnabled = true;
+        	}
+        }
         drive.drive(Joy1.getX(), Joy1.getY(), Joy2.getX());
         height = SmartDashboard.getNumber("Height");
         elevator.changeHeight(height);

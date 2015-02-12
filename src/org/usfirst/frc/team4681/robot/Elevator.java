@@ -9,9 +9,11 @@ public class Elevator {
 	Encoder elevatorEncoder;
 	double speed = 0.5;
 	double diameter = 1.3;
-	double p=0.1, i=0.0,  d=0.0;
+	double p=1.5, i=0.0,  d=0.0;
 	PIDController elevatorController;
-
+	//For use with manual controls to check that it does not break itself.
+	//final double MAX_HEIGHT = ???;
+	//final double MIN_HEIGHT = ???;
 	PIDTuner tuner;
 	public Elevator(int motorPort, Encoder encoder){
 		elevatorMotor = new PIDMotor(motorPort);
