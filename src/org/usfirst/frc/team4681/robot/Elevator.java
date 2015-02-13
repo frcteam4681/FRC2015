@@ -32,7 +32,7 @@ public class Elevator {
 	
 	// Various methods to configure the PID Controller correctly
 	public void PIDInit(){
-		elevatorController = new PIDController(p,i,d, new DistancePIDEncoder(elevatorEncoder, diameter), elevatorMotor, 0.05);
+		elevatorController = new PIDController(p,i,d, new DistancePIDEncoder(elevatorEncoder, diameter), elevatorMotor);
 		elevatorController.setInputRange(MIN_HEIGHT,MAX_HEIGHT);
 		elevatorController.setOutputRange(-1,1);
 		elevatorController.setAbsoluteTolerance(3);

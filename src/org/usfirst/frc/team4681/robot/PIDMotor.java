@@ -4,18 +4,21 @@ import edu.wpi.first.wpilibj.PIDOutput;
 import edu.wpi.first.wpilibj.Victor;
 
 public class PIDMotor implements PIDOutput {
+	// Defines victor object
 	Victor motor;
+	
+	// Constructor - initializes Victor object
 	public PIDMotor(int port){
 		motor = new Victor(port);
 	}
+	
+	// Sets the victor to the give speed. This method is used only when the PIDController is disabled
 	public void set(double speed){
-		System.out.println("speed " + speed);
 		motor.set(speed);
-		System.out.println("PWM " + motor.getRaw());
 	}
-	@Override
+
+	// writes the PID value to the Victor
 	public void pidWrite(double output) {
-		System.out.println("PID Write");
 		set(output);
 	}
 	
