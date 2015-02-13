@@ -15,17 +15,24 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
  * directory.
  */
 public class Robot extends IterativeRobot {
+	
+	// Defines the two joystick objects
 	public Joystick Joy1 = new Joystick(0);
 	public Joystick Joy2 = new Joystick(1);
 	
+	// Defines drive object, contains the encoder definitions 
 	Drive drive = new Drive(0, 1, 2, 3,	new Encoder(0,1), new Encoder(2,3), new Encoder(4,5), new Encoder(6,7));
 	
+	// Defines elevator object
 	Elevator elevator = new Elevator(4, new Encoder(8,9));
+	
+	// Booleans for switching encoders on and off
 	boolean elevatorEnabled = false;
 	boolean driveEnabled = false;
 	
+	// defines initial height as 0in
 	double height = 0;
-	public double encoderMax = 0;
+	
     Command autonomousCommand;
 
     /**
@@ -33,7 +40,7 @@ public class Robot extends IterativeRobot {
      * used for any initialization code.
      */
     public void robotInit() {
-        // instantiate the command used for the autonomous period
+        // put the height slider on the dashboard
     	SmartDashboard.putNumber("Height", height);
     }
 	
@@ -59,6 +66,7 @@ public class Robot extends IterativeRobot {
         // continue until interrupted by another command, remove
         // this line or comment it out.
         if (autonomousCommand != null) autonomousCommand.cancel();
+        // resets the elevator to 0. the elevator needs to be at the bottom for the system to work correctly
         elevator.reset();
     }
     
@@ -67,12 +75,13 @@ public class Robot extends IterativeRobot {
     * You can use it to reset subsystems before shutting down.
     */
     public void disabledInit(){
-    	System.out.println("Final maximum is " + encoderMax);
     }
 
    //This function is called periodically during operator control
     public void teleopPeriodic() {
         Scheduler.getInstance().run();
+        
+        // enable/disable elevator PID by pressing Joy1 button 8
         if(Joy1.getRawButton(8)){
         	if(elevatorEnabled){
         		elevator.disable();
@@ -85,7 +94,9 @@ public class Robot extends IterativeRobot {
         	}
         	
         }
-        if(Joy1.getRawButton(8)){
+        
+        // enable/disable drive PIDs by pressing Joy1 button 9
+        if(Joy1.getRawButton(9)){
         	if(elevatorEnabled){
         		drive.disable();
         		driveEnabled = false;
@@ -96,11 +107,15 @@ public class Robot extends IterativeRobot {
         		driveEnabled = true;
         	}
         }
+        
+        // drives the robot
         drive.drive(Joy1.getX(), Joy1.getY(), Joy2.getX());
+        
+        // Change the height of the elevator based on the smartDashboard value. PID must be enabled
         height = SmartDashboard.getNumber("Height");
         elevator.changeHeight(height);
-        //elevator.tune();
-        //System.out.println("current Height " + elevator.getHeight());
+        
+        // 
         if(Joy1.getRawButton(3)){
         	elevator.raise();
         }
