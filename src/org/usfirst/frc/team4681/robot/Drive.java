@@ -6,7 +6,10 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 public class Drive {
 	
 	// These doubles range from -1.0 to 1.0 and are what the PID controllers manipulate
-	PIDConstant k_fr,k_fl,k_br,k_bl;
+	PIDConstant k_fr = new PIDConstant();
+	PIDConstant k_fl = new PIDConstant();
+	PIDConstant k_br = new PIDConstant();
+	PIDConstant k_bl = new PIDConstant();
 	
 	// Victor initialization. fr = front right, fl = front left, and so on
 	Victor fr, fl, br, bl;
@@ -23,7 +26,7 @@ public class Drive {
 	// PID Controller initialization
 	PIDController flPID, frPID, blPID, brPID;
 	
-	double MIN_INPUT = -100, MAX_INPUT = 100;
+	double MIN_INPUT = -1600, MAX_INPUT = 1600;
 	double MIN_OUTPUT = -2.0, MAX_OUTPUT = 2.0;
 		
 	// Constructor - defines motors, encoders, and PID controllers. Also sets input and output ranges for controllers
@@ -60,10 +63,10 @@ public class Drive {
 	// Takes input from the joysticks and passes them to the motors. 
 	// Also puts PID controllers on dashboard and sets them to the average value
 	public void drive(double axis1, double axis2, double axis3){
-		fl.set(k_fl.constant*(specialSquare(-axis2 + axis1 - axis3)));
-        bl.set(k_bl.constant*(specialSquare(axis2 - axis1 - axis3)));
-        fr.set(k_fr.constant*(specialSquare(-(-axis2 - axis1 + axis3))));
-        br.set(k_br.constant*(specialSquare(-(axis2 + axis1 + axis3))));
+		fl.set(k_fl.get()*(specialSquare(-axis2 + axis1 - axis3)));
+        bl.set(k_bl.get()*(specialSquare(axis2 - axis1 - axis3)));
+        fr.set(k_fr.get()*(specialSquare(-(-axis2 - axis1 + axis3))));
+        br.set(k_br.get()*(specialSquare(-(axis2 + axis1 + axis3))));
         
         SmartDashboard.putData("Front Left", flPID);
         SmartDashboard.putData("Front Right", frPID);

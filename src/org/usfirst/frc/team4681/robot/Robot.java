@@ -97,7 +97,7 @@ public class Robot extends IterativeRobot {
         
         // enable/disable drive PIDs by pressing Joy1 button 9
         if(Joy1.getRawButton(9)){
-        	if(elevatorEnabled){
+        	if(driveEnabled){
         		drive.disable();
         		driveEnabled = false;
         	}
@@ -105,6 +105,7 @@ public class Robot extends IterativeRobot {
         	{
         		drive.enable();
         		driveEnabled = true;
+        		System.out.println("drivePID enabled");
         	}
         }
         

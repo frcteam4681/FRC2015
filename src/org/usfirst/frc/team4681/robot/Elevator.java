@@ -55,7 +55,7 @@ public class Elevator {
 	
 	// Set the desired height for the PID controller
 	public void changeHeight(double newHeight){
-		System.out.println("dHeight " + newHeight);
+		///System.out.println("dHeight " + newHeight);
 		elevatorController.setSetpoint(newHeight);
 	}
 	
