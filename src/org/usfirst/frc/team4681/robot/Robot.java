@@ -16,6 +16,11 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
  */
 public class Robot extends IterativeRobot {
 	
+	CameraServer camera = CameraServer.getInstance();
+	
+	
+	//SerialPort usbPort = new SerialPort(9600, SerialPort.Port.kUSB);
+	
 	// Defines the two joystick objects
 	public Joystick Joy1 = new Joystick(0);
 	public Joystick Joy2 = new Joystick(1);
@@ -42,6 +47,8 @@ public class Robot extends IterativeRobot {
     public void robotInit() {
         // put the height slider on the dashboard
     	SmartDashboard.putNumber("Height", height);
+    	camera.setQuality(50);
+    	camera.startAutomaticCapture("cam0");
     }
 	
 	public void disabledPeriodic() {
@@ -80,7 +87,7 @@ public class Robot extends IterativeRobot {
    //This function is called periodically during operator control
     public void teleopPeriodic() {
         Scheduler.getInstance().run();
-        
+        //SmartDashboard.putData("camera", camera);
         // enable/disable elevator PID by pressing Joy1 button 8
         if(Joy1.getRawButton(8)){
         	if(elevatorEnabled){
@@ -111,23 +118,50 @@ public class Robot extends IterativeRobot {
         
         // drives the robot
         drive.drive(Joy1.getX(), Joy1.getY(), Joy2.getX());
+        heightButtons();
+        byte[] data = new byte[1];
+        data[0] = 43;
+       // usbPort.write(data, 1);
         
         // Change the height of the elevator based on the smartDashboard value. PID must be enabled
-        height = SmartDashboard.getNumber("Height");
-        elevator.changeHeight(height);
+        //height = SmartDashboard.getNumber("Height");
+       // elevator.changeHeight(height);
         
         // 
-        if(Joy1.getRawButton(3)){
+        if(Joy1.getRawButton(4)){
         	elevator.raise();
         }
         else
-        if(Joy1.getRawButton(2)){
+        if(Joy1.getRawButton(5)){
         	elevator.lower();
         }
         else
         	elevator.brake();
     }
     
+    
+    public void heightButtons(){
+    	if(Joy1.getRawButton(2)){
+    		elevator.changeHeight(Elevator.BOTTOM);
+    	}
+    	else
+        if(Joy1.getRawButton(6)){
+    		System.out.println("Button works");
+        	elevator.changeHeight(Elevator.RAMP);
+        }
+        else
+       	if(Joy1.getRawButton(7)){
+       		elevator.changeHeight(Elevator.ONE_TOTE);
+        }
+        else
+        if(Joy1.getRawButton(10)){
+        	elevator.changeHeight(Elevator.TWO_TOTES);
+        }
+        else
+        if(Joy1.getRawButton(11)){
+        	elevator.changeHeight(Elevator.THREE_TOTES);
+        }
+    }
     // This function is called periodically during test mode
      public void testPeriodic() {
         LiveWindow.run();

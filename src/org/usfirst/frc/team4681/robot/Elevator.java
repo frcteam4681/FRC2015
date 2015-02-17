@@ -1,6 +1,7 @@
 package org.usfirst.frc.team4681.robot;
 
 import edu.wpi.first.wpilibj.*;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 public class Elevator {
 	// define PIDMotor and Encoder objects 
@@ -11,10 +12,10 @@ public class Elevator {
 	final double speed = 0.5;
 	
 	// Diameter of pulley
-	final double diameter = 1.3;
+	final double diameter = 2.06;
 	
 	// Tuned PID values
-	final double p=1.5, i=0.0,  d=0.0;
+	double p=1.0, i=0.1,  d=5.0;
 	
 	// define PID controller object
 	PIDController elevatorController;
@@ -22,6 +23,12 @@ public class Elevator {
 	// Minimum and maximum heights of the elevator mechanism
 	final double MAX_HEIGHT = 48;
 	final double MIN_HEIGHT = 0;
+	
+	final static double BOTTOM = 0.0;
+	final static double RAMP = 6.0;
+	final static double ONE_TOTE = 18.0;
+	final static double TWO_TOTES = 30.0;
+	final static double THREE_TOTES = 42.0;
 	
 	// Constructor for elevator object
 	public Elevator(int motorPort, Encoder encoder){
@@ -55,7 +62,7 @@ public class Elevator {
 	
 	// Set the desired height for the PID controller
 	public void changeHeight(double newHeight){
-		///System.out.println("dHeight " + newHeight);
+		SmartDashboard.putData("Elevator Controller", elevatorController);
 		elevatorController.setSetpoint(newHeight);
 	}
 	

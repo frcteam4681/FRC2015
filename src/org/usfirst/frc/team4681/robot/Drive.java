@@ -78,6 +78,12 @@ public class Drive {
         SmartDashboard.putNumber("Back Right Rate", bre.pidGet());
         SmartDashboard.putNumber("Back Left Rate", ble.pidGet());
 
+        System.out.println("FrontRight: " + fre.pidGet());
+        System.out.println("FrontLeft: " + fle.pidGet());
+        System.out.println("BackRight: " + bre.pidGet());
+        System.out.println("BackLeft: " + ble.pidGet());
+        
+        
         
         
         flPID.setSetpoint(average());
